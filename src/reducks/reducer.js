@@ -1,4 +1,6 @@
+import axios from "axios";
 const initialState = {
+    user: {},
     date_created: "",
     name: "",
     phone_home: "",
@@ -15,21 +17,30 @@ const initialState = {
 
 const UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
 
+export function getUserInfo() {
+    const userData = axios.get("auth/me").then( res => {
+        return res.data;
+    })
+    return {
+        type: UPDATE_MEMBERSHIP,
+        payload: userData
+    }
+}
 
-function reducer(state = initialState, action ){
+export default function reducer(state = initialState, action ){
     console.log(action);
     switch(action.type){
-        case UPDATE_MEMBERSHIP:
-            return Object.assign({}, state, action.payload);
-        default: return state;
+        case UPDATE_MEMBERSHIP + "_FULFILLED":
+            return Object.assign({}, state, {user: action.payload})
+        default: 
+            return state;
     }
 }
 
-export function updateMembership(membershipIfnoObj){
+export function updateMembership(membershipInfoObject){
     return{
         type: UPDATE_MEMBERSHIP,
-        payload: membershipIfnoObj
+        payload: membershipInfoObject
     }
 }
 
-export default reducer;

@@ -1,4 +1,5 @@
 INSERT INTO members 
 (auth_id)
 VALUES 
-($1);
+($1)
+RETURNING *;

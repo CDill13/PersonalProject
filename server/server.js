@@ -9,7 +9,6 @@ const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
 const axios = require("axios");
 const swal = require("sweetalert");
-const checkForSession = require("./checkForSession");
 
 const {
     SERVER_PORT,
@@ -61,23 +60,31 @@ passport.use( new Auth0Strategy({
     })
 }))
 
-passport.serializeUser( (profile, done) => {
+passport.serializeUser( (id, done) => {
     // the profile information from Google is put on the session here
-    done(null, profile);
+    done(null, id);
     //whatever is passed out goes on to req.user
 })
-passport.deserializeUser((profile, done) => {
-    done(null, profile);
-    // this is used every timme the user hits an endpoint so they don't have to log in every damn time.
+// this is used every time the user hits an endpoint so they don't have to log in every damn time.
+passport.deserializeUser((id, done) => {
+        //putis info on req.user
+    app.get("db").findMember([id]).then( loggenInMember => {
+        done(null, loggenInMember[0]);
+    })
 })
-
-app.use(checkForSession);
 
 app.get("/auth", passport.authenticate("auth0"));
 app.get("/auth/callback", passport.authenticate("auth0", {
     successRedirect: "http://localhost:3000/#/profile",
     failureRedirect: "http://localhost:3000/#/membership"
 }))
+app.get("/auth/me", function(req, res) {
+    if(req.user) {
+        res.status(200).send(req.user);
+    } else {
+        res.status(401).send("AH AH AH! YOU DIDN'T SAY THE MAGIC WORD!")
+    }
+})
 
 app.put("/api/update_membership/:id", ctrlr.updateMembership);
 
