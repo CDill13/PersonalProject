@@ -4,6 +4,7 @@ import {updateMembership} from "../../../reducks/reducer";
 import {connect} from "react-redux";
 import axios from "axios";
 import swal from "sweetalert";
+import {getUserInfo} from "./../../../reducks/reducer";
 
 class Profile extends Component {
     constructor(){
@@ -24,8 +25,10 @@ class Profile extends Component {
         }
     }
 
-    checkForSession(){
-        console.log(this.session)
+    componentDidMount(){
+        console.log("getUserInfo", getUserInfo());
+        this.props.getUserInfo();
+        console.log(this.props.auth_id);
     }
 
     create_id(prop, input){
@@ -61,7 +64,7 @@ class Profile extends Component {
                     default: 
                         break;
                     case "Ok":
-                    axios.put("/api/update_membership/:id", {
+                    axios.put("/api/update_membership/", {
                         date_created: this.state.date_created,
                         name: this.state.name,
                         phone_home: this.state.phone_home,
@@ -73,7 +76,8 @@ class Profile extends Component {
                         zip: this.state.zip,
                         abana_bool: this.state.abana_bool,
                         abana_num: this.state.abana_num,
-                        referred_by: this.state.referred_by
+                        referred_by: this.state.referred_by,
+                        auth_id: this.props.auth_id
                     })
                 }
             })
@@ -158,4 +162,4 @@ function mapStateToProps(membershipState){
     };
 }
 
-export default connect(mapStateToProps, {updateMembership})(Profile);
+export default connect(mapStateToProps, {getUserInfo, updateMembership})(Profile);

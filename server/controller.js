@@ -23,7 +23,7 @@ module.exports = {
         const dbInstance = req.app.get("db");
         const {date_created, name, phone_home, phone_cell, email, address, city, state, zip, abana_bool, abana_num, referred_by, auth_id} = req.body;
 
-        dbInstance.update_membership_info([date_created, name, phone_home, phone_cell, email, address, city, state, zip, abana_bool, abana_num, referred_by])
+        dbInstance.update_membership_info([date_created, name, phone_home, phone_cell, email, address, city, state, zip, abana_bool, abana_num, referred_by, auth_id])
         .then(() => {res.status(200).send()})
         .catch((err) => console.log(err) )
     }

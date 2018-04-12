@@ -47,6 +47,7 @@ passport.use( new Auth0Strategy({
     scope: "openid profile"
 }, function(accessToken, refreshToken, extraParams, profile, done) {
     const db = app.get("db");
+    console.log(profile.id)
     db.findMember([profile.id]).then( memberResult => {
         if (!memberResult[0]) {
             db.create_id([
@@ -62,14 +63,14 @@ passport.use( new Auth0Strategy({
 
 passport.serializeUser( (profile, done) => {
     // the profile information from Google is put on the session here
-    done(null, profile.id);
+    done(null, profile);
     //whatever is passed out goes on to req.user
 })
 // this is used every time the user hits an endpoint so they don't have to log in every time.
-passport.deserializeUser((profile, done) => {
+passport.deserializeUser((profile, auth_id, done) => {
         //putis info on req.user
-    app.get("db").findMember([id]).then( loggenInMember => {
-        done(null, loggenInMember[0]);
+    app.get("db").findMember([auth_id]).then( loggenInMember => {
+        done(null, profile[0]);
     })
 })
 
@@ -86,7 +87,7 @@ app.get("/auth/me", function(req, res) {
     }
 })
 
-app.put("/api/update_membership/:id", ctrlr.updateMembership);
+app.put("/api/update_membership/", ctrlr.updateMembership);
 
 // axios.post("/api/save_membership", ctrlr.create)
 
