@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.top-bar {
+  background-color: teal;
+  height: 50px;
+  width: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  flex-wrap: wrap;
+}

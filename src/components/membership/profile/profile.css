@@ -1,0 +1,14 @@
+.home-title-container{
+    display: flex;
+    background: url(//cdn2.editmysite.com/images/editor/theme-background/stock/Wood.jpg);
+    background-size: cover;
+}
+.member-form{
+    display: flex;
+    flex-direction: column;
+}
+.form-input{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
