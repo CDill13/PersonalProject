@@ -60,13 +60,13 @@ passport.use( new Auth0Strategy({
     })
 }))
 
-passport.serializeUser( (id, done) => {
+passport.serializeUser( (profile, done) => {
     // the profile information from Google is put on the session here
-    done(null, id);
+    done(null, profile.id);
     //whatever is passed out goes on to req.user
 })
-// this is used every time the user hits an endpoint so they don't have to log in every damn time.
-passport.deserializeUser((id, done) => {
+// this is used every time the user hits an endpoint so they don't have to log in every time.
+passport.deserializeUser((profile, done) => {
         //putis info on req.user
     app.get("db").findMember([id]).then( loggenInMember => {
         done(null, loggenInMember[0]);
