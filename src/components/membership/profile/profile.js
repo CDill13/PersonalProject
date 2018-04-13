@@ -28,7 +28,7 @@ class Profile extends Component {
     componentDidMount(){
         console.log("getUserInfo", getUserInfo());
         this.props.getUserInfo();
-        console.log(this.props.auth_id);
+        console.log("compdidmount / getUserInfo: " + this.props.auth_id);
     }
 
     create_id(prop, input){
@@ -144,21 +144,29 @@ class Profile extends Component {
     }
 }
 
-function mapStateToProps(membershipState){
-    const {date_created, name, phone_home, phone_cell, email, address, city, state, zip, abana_bool, abana_num, referred_by} = membershipState;
+// function mapStateToProps(membershipState){
+//     const {date_created, name, phone_home, phone_cell, email, address, city, state, zip, abana_bool, abana_num, referred_by} = membershipState;
+//     return {
+//         date_created,
+//         name,
+//         phone_home,
+//         phone_cell,
+//         email,
+//         address,
+//         city,
+//         state,
+//         zip,
+//         abana_bool,
+//         abana_num,
+//         referred_by
+//     };
+// }
+
+// export default connect(mapStateToProps, {getUserInfo, updateMembership})(Profile);
+function mapStateToProps(state){
+    console.log(state);
     return {
-        date_created,
-        name,
-        phone_home,
-        phone_cell,
-        email,
-        address,
-        city,
-        state,
-        zip,
-        abana_bool,
-        abana_num,
-        referred_by
+        user: state.user
     };
 }
 

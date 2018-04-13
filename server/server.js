@@ -59,19 +59,21 @@ passport.use( new Auth0Strategy({
             return done(null, memberResult[0].id)
         }
     })
+    .catch( err => console.log("findMember auth0Strat err: " + err));
 }))
 
-passport.serializeUser( (profile, done) => {
-    // the profile information from Google is put on the session here
-    done(null, profile);
+passport.serializeUser( (id, done) => {
+    // the user information from Google is put on the session here
+    done(null, id);
     //whatever is passed out goes on to req.user
 })
 // this is used every time the user hits an endpoint so they don't have to log in every time.
-passport.deserializeUser((profile, auth_id, done) => {
+passport.deserializeUser((id, done) => {
         //putis info on req.user
-    app.get("db").findMember([auth_id]).then( loggenInMember => {
-        done(null, profile[0]);
+    app.get("db").find_session_member([id]).then( loggedInMember => {
+        done(null, loggedInMember[0]);
     })
+    .catch(err => console.log("findMember err: " + err))
 })
 
 app.get("/auth", passport.authenticate("auth0"));
@@ -79,14 +81,17 @@ app.get("/auth/callback", passport.authenticate("auth0", {
     successRedirect: "http://localhost:3000/#/profile",
     failureRedirect: "http://localhost:3000/#/membership"
 }))
+
 app.get("/auth/me", function(req, res) {
     if(req.user) {
+        //req.user is the session store
         res.status(200).send(req.user);
     } else {
         res.status(401).send("AH AH AH! YOU DIDN'T SAY THE MAGIC WORD!")
     }
 })
 
+app.get("/api/get_membership_info", )
 app.put("/api/update_membership/", ctrlr.updateMembership);
 
 // axios.post("/api/save_membership", ctrlr.create)
