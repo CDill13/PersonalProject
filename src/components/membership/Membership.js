@@ -7,6 +7,9 @@ export default function Membership(){
             <a href="http://localhost:4200/auth/">
                 <button>BECOME A MEMBER</button>
             </a>
+            <a href="http://localhost:4200/auth/">
+                <button>LOG IN</button>
+            </a>
         </div>
     )
 }

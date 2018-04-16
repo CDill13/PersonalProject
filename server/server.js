@@ -53,10 +53,10 @@ passport.use( new Auth0Strategy({
             db.create_id([
                 profile.id
             ]).then( createdMember => {
-                return done(null, createdMember[0].id)
+                return done(null, createdMember[0].auth_id)
             })
         } else {
-            return done(null, memberResult[0].id)
+            return done(null, memberResult[0].auth_id)
         }
     })
     .catch( err => console.log("findMember auth0Strat err: " + err));
@@ -70,6 +70,7 @@ passport.serializeUser( (id, done) => {
 // this is used every time the user hits an endpoint so they don't have to log in every time.
 passport.deserializeUser((id, done) => {
         //putis info on req.user
+        console.log(id)
     app.get("db").find_session_member([id]).then( loggedInMember => {
         done(null, loggedInMember[0]);
     })
@@ -91,14 +92,27 @@ app.get("/auth/me", function(req, res) {
     }
 })
 
-app.get("/api/get_membership_info", )
+app.get("/api/get_session_auth_id", ctrlr.getMemberInfo);
+app.get("/api/get_member_info_from_db", ctrlr.getMemberInfoFromDb);
+
 app.put("/api/update_membership/", ctrlr.updateMembership);
 
 // axios.post("/api/save_membership", ctrlr.create)
 
+app.get("/auth/logout", (req, res) => {
+    console.log(portChalk("logging out"));
+    req.logOut();
+    res.redirect("/");
+})
+app.get("/auth/logout", (req, res) => {
+    console.log();
+    req.logOut();
+    res.redirect("http://localhost:3000/#");
+})
+
+
 
 let dbChalk = chalk.cyan;
-
 let port = SERVER_PORT || 4200;
 let portChalk = chalk.blue;
 app.listen(port, () => {

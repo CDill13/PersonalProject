@@ -1,10 +1,9 @@
 import React, {Component} from "react";
 import "./profile.css";
-import {updateMembership} from "../../../reducks/reducer";
+import {updateMembership, getUserInfo} from "../../../reducks/reducer";
 import {connect} from "react-redux";
 import axios from "axios";
 import swal from "sweetalert";
-import {getUserInfo} from "./../../../reducks/reducer";
 
 class Profile extends Component {
     constructor(){
@@ -21,14 +20,45 @@ class Profile extends Component {
             zip: "",
             abana_bool: "",
             abana_num: "",
-            referred_by: ""
+            referred_by: "",
+            auth_id: "",
         }
     }
 
     componentDidMount(){
-        console.log("getUserInfo", getUserInfo());
         this.props.getUserInfo();
-        console.log("compdidmount / getUserInfo: " + this.props.auth_id);
+        axios.get("/api/get_session_auth_id")
+        .then(res => {
+            console.log("session_auth_id: " + res.data.0);
+            this.setState({
+                auth_id: res.data
+            }) 
+        })
+        axios.get("/api/get_member_info_from_db", console.log("get"))
+        .then(res => {
+            console.log("member info:", res.data)
+            this.setState({
+                date_created: res.data.date_created,
+                name: res.data.name
+            })
+        })
+        console.log("getUserInfo", getUserInfo());
+
+        // abana_bool: res.data,
+        // abana_num: res.data,
+        // referred_by: res.data,
+        // zip: res.data,
+        // state: res.data,
+        // city: res.data,
+        // address: res.data,
+        // email: res.data,
+        // phone_cell: res.data,
+        // phone_home: res.data,
+        // name: res.data,
+        // date_created: res.data
+
+        // this.props.getMemberInfo();
+        // console.log("getMemberInfo: " + getMemberInfo());
     }
 
     create_id(prop, input){
@@ -77,7 +107,7 @@ class Profile extends Component {
                         abana_bool: this.state.abana_bool,
                         abana_num: this.state.abana_num,
                         referred_by: this.state.referred_by,
-                        auth_id: this.props.auth_id
+                        auth_id: this.state.auth_id
                     })
                 }
             })
@@ -93,6 +123,10 @@ class Profile extends Component {
                 <h1>Profile</h1>
                <div className="home-title-container">
                     <p>GBBG MEMBERSHIP</p>
+                </div>
+                <div>
+                    <p>{this.state.date_created}</p>
+                    <p>{this.state.name}</p>
                 </div>
                 <div className="member-form" >
                     <p></p>
@@ -137,7 +171,9 @@ class Profile extends Component {
                     </select> 
                 </div>
                 <button onClick={() => this.saveMembershipInfo()} >SUBMIT</button>
-                <button onClick={() => this.checkForSession()} >CHECK FOR SESSION</button>
+                <a href="http://localhost:3000/auth/logout" >
+                    <button>LOG OUT</button>
+                </a>
             </div>
 
         )

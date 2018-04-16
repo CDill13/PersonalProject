@@ -1,3 +1,3 @@
 SELECT * 
 FROM members 
-WHERE id = $1;
+WHERE auth_id = $1;

@@ -16,11 +16,10 @@ const initialState = {
 }
 
 const UPDATE_MEMBERSHIP = "UPDATE_MEMBERSHIP";
-const taco = "burrito"
 
 export function getUserInfo() {
     const userData = axios.get("/auth/me").then( res => {
-        console.log(res.data);
+        console.log("getUserInfo: " + res.data);
         return res.data;
     })
     return {
